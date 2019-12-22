@@ -1,0 +1,47 @@
+{
+  "name": "tf2-donation",
+  "version": "0.0.1",
+  "description": "Donation bot for Team Fortress 2",
+  "author": "Marc Mogdanz",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "npm run build && node dist/main.js",
+    "watch": "babel --watch src/ --out-dir dist/ --extensions '.ts,.tsx'",
+    "build": "babel src/ --out-dir dist/ --extensions '.ts,.tsx'",
+    "tsc": "tsc",
+    "lint": "tslint -c tslint.json src/*"
+  },
+  "dependencies": {
+    "graceful-fs": "^4.2.3",
+    "steam-totp": "^2.1.1",
+    "steam-tradeoffer-manager": "^2.10.1",
+    "steam-user": "^4.12.4",
+    "steamcommunity": "^3.41.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.7.7",
+    "@babel/core": "^7.7.7",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-proposal-numeric-separator": "^7.7.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "@babel/preset-typescript": "^7.7.7",
+    "@types/graceful-fs": "^4.1.3",
+    "@types/node": "^12.7.5",
+    "@types/steam-totp": "^2.1.0",
+    "prettier": "^1.18.2",
+    "ts-node": "^8.5.4",
+    "tslint": "^5.20.0",
+    "tslint-config-airbnb": "^5.11.2",
+    "typescript": "^3.7.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarcMogdanz/tf2-donation.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MarcMogdanz/tf2-donation/issues"
+  },
+  "homepage": "https://github.com/MarcMogdanz/tf2-donation#readme"
+}

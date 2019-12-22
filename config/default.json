@@ -1,0 +1,11 @@
+{
+  "steam": {
+    "account": {
+      "name": "",
+      "password": "",
+      "sharedSecret": "",
+      "identitySecret": ""
+    }
+  },
+  "owners": [""]
+}
