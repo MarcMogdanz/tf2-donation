@@ -1,5 +1,6 @@
 import { generateAuthCode } from "steam-totp";
 import { Config } from "./config";
+// no types available currently
 const SteamUser = require("steam-user");
 const SteamCommunity = require("steamcommunity");
 const TradeOfferManager = require("steam-tradeoffer-manager");
@@ -20,9 +21,9 @@ interface SimpleItem {
 
 export class Bot {
   private config: Config;
-  private client: any;
-  private community: any;
-  private manager: any;
+  private client: typeof SteamUser;
+  private community: typeof SteamCommunity;
+  private manager: typeof TradeOfferManager;
   private tf2: typeof TeamFortress2;
   private backpack: SimpleItem[]; // managing our own backpack object
 

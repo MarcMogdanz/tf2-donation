@@ -64,5 +64,5 @@ const declineTrade = (trade: any) => {
 };
 
 const calculateItems = (items: any[]): number => {
-  return items.reduce((sum: number, item: any) => sum + item.amount, 0) || 0;
+  return items.reduce((sum: number, item: any) => sum + item.amount, 0);
 };

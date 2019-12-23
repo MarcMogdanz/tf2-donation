@@ -5,7 +5,7 @@
   "rules": {
     "quotemark": [true, "double"],
     "eofline": true,
-    "import-name": true
+    "import-name": [true, { "gracefulFs": "fs" }]
   },
   "rulesDirectory": []
 }

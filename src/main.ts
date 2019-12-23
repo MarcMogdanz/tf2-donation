@@ -4,8 +4,6 @@ import { handleNewTradeOffer } from "./tradeoffer";
 
 const config = loadConfig();
 
-console.log("config", config);
-
 const bot = new Bot(config);
 
 const manager = bot.getTradeManager();
