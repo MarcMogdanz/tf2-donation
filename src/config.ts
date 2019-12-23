@@ -9,6 +9,9 @@ export interface Config {
       identitySecret: string;
     };
   };
+  bot: {
+    autoCraftMetal: boolean;
+  };
   owners: string[];
 }
 

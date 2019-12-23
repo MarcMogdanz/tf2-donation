@@ -3,12 +3,28 @@ import { Config } from "./config";
 const SteamUser = require("steam-user");
 const SteamCommunity = require("steamcommunity");
 const TradeOfferManager = require("steam-tradeoffer-manager");
+const TeamFortress2 = require("tf2");
+
+// maps to steam def_index
+export enum MetalType {
+  SCRAP_METAL = 5000,
+  RECLAIMED_METAL = 5001,
+  REFINED_METAL = 5002,
+}
+
+// does not contain all attributes of a backpack item
+interface SimpleItem {
+  id: string;
+  def_index: number;
+}
 
 export class Bot {
   private config: Config;
   private client: any;
   private community: any;
   private manager: any;
+  private tf2: typeof TeamFortress2;
+  private backpack: SimpleItem[]; // managing our own backpack object
 
   constructor(config: Config) {
     this.config = config;
@@ -19,6 +35,8 @@ export class Bot {
       steam: this.client,
       language: "en",
     });
+    this.tf2 = new TeamFortress2(this.client);
+    this.backpack = [];
 
     try {
       this.client.logOn({
@@ -48,6 +66,42 @@ export class Bot {
           10000,
           this.config.steam.account.identitySecret,
         );
+      });
+
+      this.tf2.on("backpackLoaded", () => {
+        console.log("Backpack loaded");
+
+        // initialy save our backpack
+        this.backpack = this.tf2.backpack;
+      });
+
+      this.tf2.on("itemAcquired", (newItem: SimpleItem) => {
+        console.log("Item aquired");
+        this.backpack.push(newItem);
+
+        // try to craft metal everytime a new metal gets added
+        if (
+          (newItem.def_index === MetalType.SCRAP_METAL ||
+            newItem.def_index === MetalType.RECLAIMED_METAL ||
+            newItem.def_index === MetalType.REFINED_METAL) &&
+          this.config.bot.autoCraftMetal
+        ) {
+          this.craftMetal();
+        }
+      });
+
+      this.tf2.on("itemChanged", (oldItem: SimpleItem, newItem: SimpleItem) => {
+        console.log("Item changed");
+
+        this.backpack = this.backpack.filter(item => item.id !== oldItem.id);
+
+        this.backpack.push(newItem);
+      });
+
+      this.tf2.on("itemRemoved", (oldItem: SimpleItem) => {
+        console.log("Item removed");
+
+        this.backpack = this.backpack.filter(item => item.id !== oldItem.id);
       });
 
       // TODO: toggle via config
@@ -82,6 +136,41 @@ export class Bot {
       this.config.owners.map(owner => this.client.chatMessage(owner, message));
     } catch (err) {
       console.log("error while notifiying", err);
+    }
+  }
+
+  public craftMetal(): void {
+    const scrapMetal: SimpleItem[] = this.backpack.filter(
+      (item: SimpleItem) => item.def_index === MetalType.SCRAP_METAL,
+    );
+    const reclaimedMetal: SimpleItem[] = this.backpack.filter(
+      (item: SimpleItem) => item.def_index === MetalType.RECLAIMED_METAL,
+    );
+
+    if (reclaimedMetal.length >= 3) {
+      for (let x = 0; x + 2 < reclaimedMetal.length; x += 3) {
+        const craftItems = [
+          reclaimedMetal[x].id,
+          reclaimedMetal[x + 1].id,
+          reclaimedMetal[x + 2].id,
+        ];
+
+        // TODO: catch error
+        this.tf2.craft(craftItems);
+      }
+    }
+
+    if (scrapMetal.length >= 3) {
+      for (let x = 0; x + 2 < scrapMetal.length; x += 3) {
+        const craftItems = [
+          scrapMetal[x].id,
+          scrapMetal[x + 1].id,
+          scrapMetal[x + 2].id,
+        ];
+
+        // TODO: catch error
+        this.tf2.craft(craftItems);
+      }
     }
   }
 }
