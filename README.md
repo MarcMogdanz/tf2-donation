@@ -91,19 +91,21 @@ docker run -v "%cd%/config/:/app/config/:ro" tf2:latest
 
 The general schema of the config is:
 
-```
-steam: {
-  account: {
-    name: string;
-    password: string;
-    sharedSecret: string;
-    identitySecret: string;
+```typescript
+interface Config {
+  steam: {
+    account: {
+      name: string;
+      password: string;
+      sharedSecret: string;
+      identitySecret: string;
+    };
   };
-};
-bot: {
-  autoCraftMetal: boolean;
-};
-owners: string[];
+  bot: {
+    autoCraftMetal: boolean;
+  };
+  owners: string[];
+}
 ```
 
 You need to set your steam name (not the display name!) and password as well as your shared secret and identity secret. There are multiple ways to get the later two:
